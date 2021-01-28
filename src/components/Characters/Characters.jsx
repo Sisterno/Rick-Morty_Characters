@@ -25,7 +25,7 @@ const Characters = () => {
   const [Characters, setCharacters] = useState([]);
   const [Styles, setStyles] = useState(Light);
   const [[DarkMode, setDarkMode]] = useContexHook();
-  const [Favorites, dispach] = useReducer(Funct_reducer, IntitalState);
+  const [Favorites, favorite_dispach] = useReducer(Funct_reducer, IntitalState);
 
   useEffect(() => {
     async function GetData() {
@@ -46,14 +46,14 @@ const Characters = () => {
   }, [DarkMode]);
 
   const handleClick_favorite = (Character) => {
-    dispach({ type: "ADD_TO_FAVORITES", payLoad: Character });
+    favorite_dispach({ type: "ADD_TO_FAVORITES", payLoad: Character });
   };
 
   return (
     <div className={Styles.Characters}>
       <div>
         {Favorites.Favorites.map((Favorite) => {
-          <li key={Favorite.id}>{Favorite.name}</li>;
+          return <li key={Favorite.id}>{Favorite.name}</li>;
         })}
       </div>
       {Characters.map((Character) => {
@@ -66,11 +66,14 @@ const Characters = () => {
               <span>{Character["gender"]}</span>
               <span>Origin :{Character["origin"]["name"]}</span>
               <span>Location: {Character["location"]["name"]}</span>
-              <button type={"button"} onClick={handleClick_favorite(Character)}>
+              <button type={"button"} onClick={()=>{
+                handleClick_favorite(Character)
+              }}>
                 Agregar a favoritos
               </button>
             </div>
           </div>
+
         );
       })}
     </div>
