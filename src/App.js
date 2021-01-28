@@ -1,13 +1,16 @@
-import logo from './logo.svg';
 import Header from './components/Header'
 import './App.css';
+import Characters from './components/Characters/Characters';
+import React from 'react';
+import {ContextHooks} from './components/ContextHook';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <ContextHooks>
         <Header/>
-      </header>
+        <Characters/>
+      </ContextHooks>
     </div>
   );
 }

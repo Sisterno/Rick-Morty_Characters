@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
+import { useContexHook } from "./ContextHook";
 
 const Header = () => {
-    const [DarkMode, setDarkMode] = useState(false);
+    const [[DarkMode, setDarkMode]]= useContexHook();
 
     const HandleClick =()=>{
         setDarkMode(!DarkMode);
@@ -9,8 +10,8 @@ const Header = () => {
     return ( 
         <>
             <div className="Header">
-                <h1 className="">ReactHooks</h1>
-                <button type='button' onClick={()=>{setDarkMode(!DarkMode)}}>DarkMode {DarkMode? 'Dark Mode':'Light Mode'}</button>
+                <h1 className="">Rick and Morty, characters</h1>
+                <button type='button' onClick={HandleClick}>DarkMode {DarkMode? 'Dark Mode':'Light Mode'}</button>
             </div>
         </>
      );

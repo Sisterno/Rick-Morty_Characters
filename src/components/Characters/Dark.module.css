@@ -1,0 +1,30 @@
+.Carta {
+  /* background-color: azure; */
+  /* border: 5px solid; */
+  /* border-color: rgb(204, 204, 204); */
+  box-shadow: 20px 12px 5px rgb(12, 13, 26);
+}
+.Foto {
+  width: 100%;
+}
+.Characters {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 5%;
+  grid-row-gap: 40px;
+  padding: 5% 5% 5% 5%;
+  
+}
+.data {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.data span {
+  font-size: 20px;
+  padding: 5px 0;
+}
+.data h3 {
+  font-size: 25;
+  margin: 0 0 0 0;
+  padding: 2px;
+}

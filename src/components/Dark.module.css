@@ -1,0 +1,17 @@
+.ContainerPri span h3 h1{
+    color: aliceblue;
+}
+.ContainerPri h1{
+    color: aliceblue;
+}
+.ContainerPri span{
+    color: aliceblue;
+}
+.ContainerPri h3{
+    color: aliceblue;
+}
+
+.ContainerPri{
+    padding-top: 20px;
+    background-color: rgb(33, 36, 71);
+}
