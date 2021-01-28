@@ -1,36 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import axios from "axios";
 import Light from "./Light.module.css";
 import Dark from "./Dark.module.css";
-import {useContexHook} from "../ContextHook";
+import { useContexHook } from "../ContextHook";
+
+const IntitalState = {
+  Favorites: [],
+};
+
+const Funct_reducer = (state, action) => {
+  switch (action.type) {
+    case "ADD_TO_FAVORITES":
+      return {
+        ...state,
+        Favorites: [...state.Favorites, action.payLoad],
+      };
+
+    default:
+      return state;
+  }
+};
 
 const Characters = () => {
   const [Characters, setCharacters] = useState([]);
   const [Styles, setStyles] = useState(Light);
-  const [[DarkMode,setDarkMode]] = useContexHook();
+  const [[DarkMode, setDarkMode]] = useContexHook();
+  const [Favorites, dispach] = useReducer(Funct_reducer, IntitalState);
 
   useEffect(() => {
-    async function GetData(params) {
-        let RMcharacters = (
-            await axios.get("https://rickandmortyapi.com/api/character")
-          ).data.results;
-          setCharacters(RMcharacters);
+    async function GetData() {
+      let RMcharacters = (
+        await axios.get("https://rickandmortyapi.com/api/character")
+      ).data.results;
+      setCharacters(RMcharacters)
+      return RMcharacters;
     }
-    GetData();
+    GetData()
   }, []);
   useEffect(() => {
-    if(DarkMode){
-      setStyles(Dark)
-    }else{
-      setStyles(Light)
+    if (DarkMode) {
+      setStyles(Dark);
+    } else {
+      setStyles(Light);
     }
   }, [DarkMode]);
 
+  const handleClick_favorite = (Character) => {
+    dispach({ type: "ADD_TO_FAVORITES", payLoad: Character });
+  };
+
   return (
     <div className={Styles.Characters}>
-      {Characters.map((Character, id) => {
+      <div>
+        {Favorites.Favorites.map((Favorite) => {
+          <li key={Favorite.id}>{Favorite.name}</li>;
+        })}
+      </div>
+      {Characters.map((Character) => {
         return (
-          <div className={Styles.Carta} key={"RMcart" + id}>
+          <div className={Styles.Carta} key={Character.id}>
             <img src={Character["image"]} alt="" className={Styles.Foto} />
             <div className={Styles.data}>
               <h3 className={Styles.Nombre}>{Character["name"]}</h3>
@@ -38,6 +66,9 @@ const Characters = () => {
               <span>{Character["gender"]}</span>
               <span>Origin :{Character["origin"]["name"]}</span>
               <span>Location: {Character["location"]["name"]}</span>
+              <button type={"button"} onClick={handleClick_favorite(Character)}>
+                Agregar a favoritos
+              </button>
             </div>
           </div>
         );
@@ -45,6 +76,5 @@ const Characters = () => {
     </div>
   );
 };
-
 
 export default Characters;
