@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useMemo } from "react";
 import axios from "axios";
 import Light from "./Light.module.css";
 import Dark from "./Dark.module.css";
@@ -26,16 +26,17 @@ const Characters = () => {
   const [Styles, setStyles] = useState(Light);
   const [[DarkMode, setDarkMode]] = useContexHook();
   const [Favorites, favorite_dispach] = useReducer(Funct_reducer, IntitalState);
+  const [Search, setSearch] = useState("");
 
   useEffect(() => {
     async function GetData() {
       let RMcharacters = (
         await axios.get("https://rickandmortyapi.com/api/character")
       ).data.results;
-      setCharacters(RMcharacters)
+      setCharacters(RMcharacters);
       return RMcharacters;
     }
-    GetData()
+    GetData();
   }, []);
   useEffect(() => {
     if (DarkMode) {
@@ -49,34 +50,51 @@ const Characters = () => {
     favorite_dispach({ type: "ADD_TO_FAVORITES", payLoad: Character });
   };
 
+  const HandleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const FilteredUsers = useMemo(() => {
+    return Characters.filter((user) => {
+      return user.name.toLowerCase().includes(Search.toLowerCase());
+    });
+  }, [Characters, Search]);
+
   return (
-    <div className={Styles.Characters}>
+    <>
+      <div>
+        <input type="text" value={Search} onChange={HandleSearch} />
+      </div>
       <div>
         {Favorites.Favorites.map((Favorite) => {
           return <li key={Favorite.id}>{Favorite.name}</li>;
         })}
       </div>
-      {Characters.map((Character) => {
-        return (
-          <div className={Styles.Carta} key={Character.id}>
-            <img src={Character["image"]} alt="" className={Styles.Foto} />
-            <div className={Styles.data}>
-              <h3 className={Styles.Nombre}>{Character["name"]}</h3>
-              <span>{Character["species"]}</span>
-              <span>{Character["gender"]}</span>
-              <span>Origin :{Character["origin"]["name"]}</span>
-              <span>Location: {Character["location"]["name"]}</span>
-              <button type={"button"} onClick={()=>{
-                handleClick_favorite(Character)
-              }}>
-                Agregar a favoritos
-              </button>
+      <div className={Styles.Characters}>
+        {FilteredUsers.map((Character) => {
+          return (
+            <div className={Styles.Carta} key={Character.id}>
+              <img src={Character["image"]} alt="" className={Styles.Foto} />
+              <div className={Styles.data}>
+                <h3 className={Styles.Nombre}>{Character["name"]}</h3>
+                <span>{Character["species"]}</span>
+                <span>{Character["gender"]}</span>
+                <span>Origin :{Character["origin"]["name"]}</span>
+                <span>Location: {Character["location"]["name"]}</span>
+                <button
+                  type={"button"}
+                  onClick={() => {
+                    handleClick_favorite(Character);
+                  }}
+                >
+                  Agregar a favoritos
+                </button>
+              </div>
             </div>
-          </div>
-
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 
